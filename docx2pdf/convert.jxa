@@ -103,6 +103,33 @@ function parseArgs([inputPath, outputPath, keepActive, ...rest]) {
 
   return output;
 }
+function convert(input, output) {
+  word.open(input);
+  const doc = word.activeDocument;
+  try {
+    doc.saveAs({ fileName: output, fileFormat: "format PDF" });
+    console.log(
+      JSON.stringify({
+        input: input.toString(),
+        output: output,
+        result: "success"
+      })
+    );
+  } catch (e) {
+    console.log(e);
+    console.log(
+      JSON.stringify({
+        input: input.toString(),
+        output: output,
+        result: "error",
+        error: e.toString()
+      })
+    );
+    console.log(`Failed to save ${output}`);
+    $.exit(1);
+  }
+  doc.close({ saving: "no" });
+}
 
 function run(args) {
   args = parseArgs(args);
@@ -126,66 +153,18 @@ function run(args) {
       .diskItems.name()
       .sort();
     for (file of files) {
-      if (!file.endsWith(".docx") && !file.endsWith(".doc")) continue;
+      if (!file.endsWith(".docx") && !file.endsWith(".doc"))
+        continue;
       const filepath = Path(`${args.inputPath}/${file}`);
       console.log(`converting ${filepath}`);
-      word.open(filepath);
-      const doc = word.activeDocument;
       let filename = file.replace(".docx", "").replace(".doc", "");
-      const outputFilePath =
-        args.outputPath + "/" + filename + ".pdf";
-      try {
-        doc.saveAs({ fileName: outputFilePath, fileFormat: "format PDF" });
-        console.log(
-          JSON.stringify({
-            input: filepath.toString(),
-            output: outputFilePath,
-            result: "success"
-          })
-        );
-      } catch (e) {
-        console.log(e);
-        console.log(
-          JSON.stringify({
-            input: filepath.toString(),
-            output: outputFilePath,
-            result: "error",
-            error: e.toString()
-          })
-        );
-        console.log(`Failed to save ${outputFilePath}`);
-        $.exit(1);
-      }
-      doc.close({ saving: "no" });
+      const outputFilePath = args.outputPath + "/" + filename + ".pdf";
+      convert(filepath, outputFilePath);
     }
   } else {
     console.log(`Converting Single Word Document: ${args.inputPath}`);
     console.log(`Saving to: ${args.outputPath}`);
-    word.open(args.inputPath);
-    const doc = word.activeDocument;
-    try {
-      doc.saveAs({ fileName: args.outputPath, fileFormat: "format PDF" });
-      console.log(
-        JSON.stringify({
-          input: args.inputPath.toString(),
-          output: args.outputPath,
-          result: "success"
-        })
-      );
-    } catch (e) {
-      console.log(e);
-      console.log(
-        JSON.stringify({
-          input: args.inputPath.toString(),
-          output: args.outputPath,
-          result: "error",
-          error: e.toString()
-        })
-      );
-      console.log(`Failed to save ${args.outputPath}`);
-      $.exit(1);
-    }
-    doc.close({ saving: "no" });
+    convert(args.inputPath, args.outputPath);
   }
 
   if (!args.keepActive) {
