@@ -103,7 +103,7 @@ function parseArgs([inputPath, outputPath, keepActive, ...rest]) {
 
   return output;
 }
-function convert(input, output) {
+function convert(word, input, output) {
   word.open(input);
   const doc = word.activeDocument;
   try {
@@ -159,12 +159,12 @@ function run(args) {
       console.log(`converting ${filepath}`);
       let filename = file.replace(".docx", "").replace(".doc", "");
       const outputFilePath = args.outputPath + "/" + filename + ".pdf";
-      convert(filepath, outputFilePath);
+      convert(word, filepath, outputFilePath);
     }
   } else {
     console.log(`Converting Single Word Document: ${args.inputPath}`);
     console.log(`Saving to: ${args.outputPath}`);
-    convert(args.inputPath, args.outputPath);
+    convert(word, args.inputPath, args.outputPath);
   }
 
   if (!args.keepActive) {
