@@ -9,22 +9,10 @@ On Windows, this is implemented via [`win32com`](https://pypi.org/project/pywin3
 
 ## Install
 
-On macOS:
-
-```
-brew install aljohri/-/docx2pdf
-```
-
 Via [pipx](https://pipxproject.github.io/pipx/):
 
 ```
-pipx install docx2pdf
-```
-
-Via pip:
-
-```
-pip install docx2pdf
+pipx install git+https://github.com/xVanTuring/docx2pdf
 ```
 
 ## CLI
