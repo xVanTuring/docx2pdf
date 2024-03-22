@@ -1,4 +1,5 @@
 # docx2pdf
+> Support file name ending with `doc` and `docx`
 
 [![PyPI](https://img.shields.io/pypi/v/docx2pdf)](https://pypi.org/project/docx2pdf/)
 
